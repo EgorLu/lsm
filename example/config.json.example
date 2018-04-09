@@ -1,0 +1,15 @@
+{
+  "alerts": {
+    "processes": [],
+    "cpu_percent": 0,
+    "memory_percent": 0,
+    "swap_percent": 0,
+    "temp_core": 0,
+  },
+  "email": {
+    "address": "",
+    "smtp_server": "",
+    "smtp_user": "",
+    "smtp_pass": "",
+  }
+}
