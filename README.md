@@ -19,6 +19,6 @@ Additionally, it is possible to change the configuration via the application's i
 
 ## Usage
 
-* Run `lsm.py -h` for the help window.
+* `lsm.py -h` for the help window.
 * `lsm.py -i` for the interactive mode that feauters multichoice menus.
 * `lsm.py -f` for the flags mode, that enables quick access to the desired function.
