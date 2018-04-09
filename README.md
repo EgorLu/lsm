@@ -23,3 +23,14 @@ Additionally, it is possible to change the configuration via the application's i
 * `lsm.py -h` for the help window.
 * `lsm.py -i` for the interactive mode that features multichoice menus.
 * `lsm.py -f` for the flags mode, that enables quick access to the desired function.
+
+## Structure
+
+* **args.py** - Arguments parsing module.
+* **config.py** - User configuration module.
+* **cron.py** - Crontab management module.
+* **lsm.py** - Mail application.
+* **mail.py** - Email sending module.
+* **menu.py** - Interactive menus module.
+* **monitor.py** - System scan and report module.
+* **util_funcs.py** - Utility functions module.
