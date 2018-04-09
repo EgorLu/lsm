@@ -8,6 +8,7 @@ A system monitor tool that is designed to be ran as a cronjob, will watch for th
 Installation is simple.
 1. Clone or download the repository to your machine.
 2. Run `lsm.py`.
+3. Add to the user's personal crontab via the interactive mode or the `lsm.py -f --cronadd` command.
 
 ## Configuration
 
@@ -20,5 +21,5 @@ Additionally, it is possible to change the configuration via the application's i
 ## Usage
 
 * `lsm.py -h` for the help window.
-* `lsm.py -i` for the interactive mode that feauters multichoice menus.
+* `lsm.py -i` for the interactive mode that features multichoice menus.
 * `lsm.py -f` for the flags mode, that enables quick access to the desired function.
