@@ -231,45 +231,47 @@ def check_status():
             logger.info("Swap memory load is below the alert threshold.")
 
     """Temperature"""
-    # If the temperature value is above it's alert threshold.
-    if sys_scan["temp"]["coretemp"][0][1] > config.settings["alerts"]["temp_core"]:
-        # Add the 'temp' key to enable it's nested population.
-        if "temp" not in cur_status:
-            cur_status["temp"] = {}
-        # If the temperature alert was already logged:
-        if "temp" in prev_status:
-            # If more than hour passed since the alert's report:
-            if utils.time_since_report(prev_status["temp"]):
-                # Update the 'updated' value and the 'reported' value to the current timestamp.
-                cur_status["temp"] = {
-                    "value": sys_scan["temp"]["coretemp"][0][1],
-                    "triggered": prev_status["temp"]["triggered"], "updated": timestamp,
-                    "reported": timestamp
-                }
+    # On some VMs there are no thermostats at all ;)
+    if "coretemp" in sys_scan["temp"]:
+        # If the temperature value is above it's alert threshold.
+        if sys_scan["temp"]["coretemp"][0][1] > config.settings["alerts"]["temp_core"]:
+            # Add the 'temp' key to enable it's nested population.
+            if "temp" not in cur_status:
+                cur_status["temp"] = {}
+            # If the temperature alert was already logged:
+            if "temp" in prev_status:
+                # If more than hour passed since the alert's report:
+                if utils.time_since_report(prev_status["temp"]):
+                    # Update the 'updated' value and the 'reported' value to the current timestamp.
+                    cur_status["temp"] = {
+                        "value": sys_scan["temp"]["coretemp"][0][1],
+                        "triggered": prev_status["temp"]["triggered"], "updated": timestamp,
+                        "reported": timestamp
+                    }
+                else:
+                    # Otherwise only update the 'updated' field.
+                    cur_status["temp"] = {
+                        "value": sys_scan["temp"]["coretemp"][0][1],
+                        "triggered": prev_status["temp"]["triggered"], "updated": timestamp,
+                        "reported": prev_status["temp"]["reported"]
+                    }
+            # If the alert was just generated.
             else:
-                # Otherwise only update the 'updated' field.
+                # Create a new entry with the trigger time set to current time and same time for update and report time.
                 cur_status["temp"] = {
                     "value": sys_scan["temp"]["coretemp"][0][1],
-                    "triggered": prev_status["temp"]["triggered"], "updated": timestamp,
-                    "reported": prev_status["temp"]["reported"]
+                    "triggered": timestamp, "updated": timestamp, "reported": timestamp
                 }
-        # If the alert was just generated.
+                # Add a message to the text log, indicating that the value is above it's threshold.
+                logger.warning("Temperature is beyond the alert threshold.")
+        # If the temperature value is normal:
         else:
-            # Create a new entry with the trigger time set to current time and same time for update and report time.
-            cur_status["temp"] = {
-                "value": sys_scan["temp"]["coretemp"][0][1],
-                "triggered": timestamp, "updated": timestamp, "reported": timestamp
-            }
-            # Add a message to the text log, indicating that the value is above it's threshold.
-            logger.warning("Temperature is beyond the alert threshold.")
-    # If the temperature value is normal:
-    else:
-        # If the temperature alert was already logged:
-        if "temp" in prev_status:
-            # Add the name of the property to the resolved alerts list
-            cur_status["resolved"].append("temp")
-            # Add a message to the text log, indicating that the value is below it's threshold.
-            logger.info("Temperature is below the alert threshold.")
+            # If the temperature alert was already logged:
+            if "temp" in prev_status:
+                # Add the name of the property to the resolved alerts list
+                cur_status["resolved"].append("temp")
+                # Add a message to the text log, indicating that the value is below it's threshold.
+                logger.info("Temperature is below the alert threshold.")
 
     return cur_status
 
