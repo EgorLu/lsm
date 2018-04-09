@@ -12,6 +12,6 @@ setup(
     url='https://github.com/EgorLu/lsm',
     license='MIT',
     author='Egor Lunin',
-    author_email='',
+    author_email='elunin@infinidat.com',
     description='Light System Monitor'
 )
