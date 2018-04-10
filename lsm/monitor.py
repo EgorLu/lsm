@@ -232,7 +232,7 @@ def check_status():
 
     """Temperature"""
     # On some VMs there are no thermostats at all ;)
-    if "coretemp" in sys_scan["temp"]:
+    if type(sys_scan["temp"]) is dict and "coretemp" in sys_scan["temp"]:
         # If the temperature value is above it's alert threshold.
         if sys_scan["temp"]["coretemp"][0][1] > config.settings["alerts"]["temp_core"]:
             # Add the 'temp' key to enable it's nested population.
@@ -339,7 +339,7 @@ def print_report():
 
     if "swap" in status_report:
         table.add_row(
-            ["Swap use is too high! Current: {}, Alert: {}".format(status_report["swap"],
+            ["Swap use is too high! Current: {}, Alert: {}".format(status_report["swap"]["value"],
                                                                    config.settings["alerts"]["swap_percent"]),
              status_report["swap"]["triggered"], utils.duration(status_report["swap"])]
         )
