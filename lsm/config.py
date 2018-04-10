@@ -103,7 +103,7 @@ def set_cpu_percent(value):
     :return: None
     """
     if isinstance(value, int) and 0 <= value <= 100:
-        settings["cpu_percent"] = value
+        settings["alerts"]["cpu_percent"] = value
         update()
 
 
@@ -115,7 +115,7 @@ def set_memory_percent(value):
     :return: None
     """
     if isinstance(value, int) and 0 <= value <= 100:
-        settings["memory_percent"] = value
+        settings["alerts"]["memory_percent"] = value
         update()
 
 
@@ -127,7 +127,7 @@ def set_swap_percent(value):
     :return: None
     """
     if isinstance(value, int) and 0 <= value <= 100:
-        settings["swap_percent"] = value
+        settings["alerts"]["swap_percent"] = value
         update()
 
 
@@ -139,5 +139,5 @@ def set_temp_core(value):
     :return: None
     """
     if isinstance(value, int) and 0 <= value <= 100:
-        settings["temp_core"] = value
+        settings["alerts"]["temp_core"] = value
         update()
