@@ -9,6 +9,8 @@ import config  # Config module for the setter functions.
 import cron  # Cron module for the crontab manipulations.
 
 
+# TODO - Add decorators
+
 # Main menu
 def menu_main():
     os.system("clear")
@@ -65,11 +67,66 @@ def menu_cron_remove():
 def menu_alerts():
     print "Light System Monitor\n"
     print "Alerts configuration\n"
-    print "1. WORK IN PROGRESS"
-    print "2. UNDER CONSTRUCTION"
+    print "1. Processes"
+    print "2. Thresholds"
     print "\n0. Main menu"
     choice = raw_input(">>  ")
     exec_menu(choice, "menu_alerts")
+
+
+# Alerts - Processes sub-menu
+def menu_alerts_processes():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Processes\n"
+    print "Watched processes: {}\n".format(", ".join(config.list_processes()))
+    print "1. Add process"
+    print "2. Remove process"
+    print "\n9. Back"
+    print "0. Main menu"
+    choice = raw_input(">>  ")
+    exec_menu(choice, "menu_alerts_processes")
+
+
+# Alerts - Processes sub-menu
+def menu_alerts_processes_add():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Processes -> Add Process\n"
+    process = raw_input("Please enter a process to watch: ")
+    if config.add_process(process):
+        print "{} added to the watch list!".format(process)
+    else:
+        print "Failed to add!"
+    raw_input("Press enter to acknowledge.")
+    # TODO - Maybe there's no need for this output and it's easier to see the results in the parent menu.
+    exec_menu("menu_alerts_processes", "menu_alerts_processes")
+
+
+# Alerts - Processes sub-menu
+def menu_alerts_processes_remove():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Processes -> Remove Process\n"
+    process = raw_input("Please enter a process to remove from watching: ")
+    if config.remove_process(process):
+        print "{} removed from the watch list!".format(process)
+    else:
+        print "Failed to remove!"
+    raw_input("Press enter to acknowledge.")
+    # TODO - Maybe there's no need for this output and it's easier to see the results in the parent menu.
+    exec_menu("menu_alerts_processes", "menu_alerts_processes")
+
+
+# Alerts - Thresholds sub-menu
+def menu_alerts_thresholds():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Thresholds\n"
+    print "1. Set CPU percentage threshold"
+    print "2. Set Memory percentage threshold"
+    print "3. Set Swap memory percentage threshold"
+    print "4. Set Core Temperature threshold"
+    print "\n9. Back"
+    print "0. Main menu"
+    choice = raw_input(">>  ")
+    exec_menu(choice, "menu_alerts_thresholds")
 
 
 # Email menu
@@ -164,6 +221,20 @@ menu_actions = {
     },
     "menu_alerts": {
         "menu_alerts": menu_alerts,
+        "1": menu_alerts_processes,
+        "2": menu_alerts_thresholds,
+        "0": menu_main,
+    },
+    "menu_alerts_processes": {
+        "menu_alerts_processes": menu_alerts_processes,
+        "1": menu_alerts_processes_add,
+        "2": menu_alerts_processes_remove,
+        "9": menu_alerts,
+        "0": menu_main,
+    },
+    "menu_alerts_thresholds": {
+        "menu_alerts_thresholds": menu_alerts_thresholds,
+        "9": menu_alerts,
         "0": menu_main,
     },
     "menu_email": {

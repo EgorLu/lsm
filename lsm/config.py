@@ -69,3 +69,75 @@ def set_smtp_pass(password):
         print "SMTP server changed from {} to {}".format(settings["email"]["smtp_pass"], password)
         settings["email"]["smtp_pass"] = password
         update()
+
+
+def list_processes():
+    return [process for process in settings["alerts"]["processes"]]
+
+
+def add_process(process):
+    if re.match(r"[a-zA-Z]+", process):
+        process = process.lower()
+        if process not in settings["alerts"]["processes"]:
+            settings["alerts"]["processes"].append(process)
+            update()
+            return True
+    return False
+
+
+def remove_process(process):
+    if re.match(r"[a-zA-Z]+", process):
+        process = process.lower()
+        if process in settings["alerts"]["processes"]:
+            settings["alerts"]["processes"].remove(process)
+            update()
+            return True
+    return False
+
+
+def set_cpu_percent(value):
+    """
+    CPU percentage threshold setter.
+    :param value: The percentage 0-100.
+    :type value: int
+    :return: None
+    """
+    if isinstance(value, int) and 0 <= value <= 100:
+        settings["cpu_percent"] = value
+        update()
+
+
+def set_memory_percent(value):
+    """
+    RAM/DIMM percentage threshold setter.
+    :param value: The percentage 0-100.
+    :type value: int
+    :return: None
+    """
+    if isinstance(value, int) and 0 <= value <= 100:
+        settings["memory_percent"] = value
+        update()
+
+
+def set_swap_percent(value):
+    """
+    Swap memory percentage threshold setter.
+    :param value: The percentage 0-100.
+    :type value: int
+    :return: None
+    """
+    if isinstance(value, int) and 0 <= value <= 100:
+        settings["swap_percent"] = value
+        update()
+
+
+def set_temp_core(value):
+    """
+    Core Temperature percentage threshold setter.
+    :param value: The percentage 0-100.
+    :type value: int
+    :return: None
+    """
+    if isinstance(value, int) and 0 <= value <= 100:
+        settings["temp_core"] = value
+        update()
