@@ -7,7 +7,9 @@ A system monitor tool that is designed to be ran as a cronjob, will watch for th
 
 Installation is simple.
 1. Clone or download the repository to your machine.
-2. Run `lsm.py`.
+2. `cd` to the `lsm` directory.
+2. Run `sudo python setup.py install` (you may need to specify to use `python2.7` if numerous configurations are available on the local machine).
+3. Run `lsm\lsm.py`.
 3. Add to the user's personal crontab via the interactive mode or the `lsm.py -f --cronadd` command.
 
 ## Configuration
