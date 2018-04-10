@@ -129,6 +129,42 @@ def menu_alerts_thresholds():
     exec_menu(choice, "menu_alerts_thresholds")
 
 
+# Alerts - Thresholds sub-menu - Set CPU
+def menu_alerts_thresholds_cpu():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Thresholds -> CPU percentage\n"
+    threshold = raw_input("Please enter the new threshold: ")
+    config.set_cpu_percent(int(threshold))
+    exec_menu("menu_alerts_thresholds", "menu_alerts_thresholds")
+
+
+# Alerts - Thresholds sub-menu - Set Memory
+def menu_alerts_thresholds_memory():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Thresholds -> Memory percentage\n"
+    threshold = raw_input("Please enter the new threshold: ")
+    config.set_memory_percent(int(threshold))
+    exec_menu("menu_alerts_thresholds", "menu_alerts_thresholds")
+
+
+# Alerts - Thresholds sub-menu - Set Swap
+def menu_alerts_thresholds_swap():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Thresholds -> Swap percentage\n"
+    threshold = raw_input("Please enter the new threshold: ")
+    config.set_swap_percent(int(threshold))
+    exec_menu("menu_alerts_thresholds", "menu_alerts_thresholds")
+
+
+# Alerts - Thresholds sub-menu - Core temperature
+def menu_alerts_thresholds_temp_core():
+    print "Light System Monitor\n"
+    print "Alerts configuration -> Thresholds -> Core temperature\n"
+    threshold = raw_input("Please enter the new threshold: ")
+    config.set_temp_core(int(threshold))
+    exec_menu("menu_alerts_thresholds", "menu_alerts_thresholds")
+
+
 # Email menu
 def menu_email():
     print "Light System Monitor\n"
@@ -234,6 +270,10 @@ menu_actions = {
     },
     "menu_alerts_thresholds": {
         "menu_alerts_thresholds": menu_alerts_thresholds,
+        "1": menu_alerts_thresholds_cpu,
+        "2": menu_alerts_thresholds_memory,
+        "3": menu_alerts_thresholds_swap,
+        "4": menu_alerts_thresholds_temp_core,
         "9": menu_alerts,
         "0": menu_main,
     },
