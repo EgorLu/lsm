@@ -8,9 +8,12 @@ import json  # JSON module in order to work with the stored configuration file.
 import os  # OS module to be able to check whether a file exists.
 import re  # Regex module for the regex checks on field updates.
 
+# Get current directory path
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # Check whether the config file exists.
 # If it doesn't exist, create an empty file.
-if not os.path.isfile("./config.json"):
+if not os.path.isfile("{}/config.json".format(dir_path)):
     settings = {
         "alerts": {
             "processes": [],
@@ -27,11 +30,11 @@ if not os.path.isfile("./config.json"):
         }
     }
     json_settings = json.dumps(settings, indent=4, sort_keys=True)
-    with open("./config.json", "w+") as f:
+    with open("{}/config.json".format(dir_path), "w+") as f:
         f.write(json_settings)
 
 # Open the config file.
-with open("./config.json") as f:
+with open("{}/config.json".format(dir_path)) as f:
     # Decode the JSON and load it's data.
     settings = json.loads(f.read())
 
@@ -98,11 +101,12 @@ def remove_process(process):
 def set_cpu_percent(value):
     """
     CPU percentage threshold setter.
+    If '-1' is entered, the script will know not to check this setting.
     :param value: The percentage 0-100.
     :type value: int
     :return: None
     """
-    if isinstance(value, int) and 0 <= value <= 100:
+    if isinstance(value, int) and -1 <= value <= 100:
         settings["alerts"]["cpu_percent"] = value
         update()
 
@@ -110,11 +114,12 @@ def set_cpu_percent(value):
 def set_memory_percent(value):
     """
     RAM/DIMM percentage threshold setter.
+    If '-1' is entered, the script will know not to check this setting.
     :param value: The percentage 0-100.
     :type value: int
     :return: None
     """
-    if isinstance(value, int) and 0 <= value <= 100:
+    if isinstance(value, int) and -1 <= value <= 100:
         settings["alerts"]["memory_percent"] = value
         update()
 
@@ -122,11 +127,12 @@ def set_memory_percent(value):
 def set_swap_percent(value):
     """
     Swap memory percentage threshold setter.
+    If '-1' is entered, the script will know not to check this setting.
     :param value: The percentage 0-100.
     :type value: int
     :return: None
     """
-    if isinstance(value, int) and 0 <= value <= 100:
+    if isinstance(value, int) and -1 <= value <= 100:
         settings["alerts"]["swap_percent"] = value
         update()
 
@@ -134,10 +140,11 @@ def set_swap_percent(value):
 def set_temp_core(value):
     """
     Core Temperature percentage threshold setter.
+    If '-1' is entered, the script will know not to check this setting.
     :param value: The percentage 0-100.
     :type value: int
     :return: None
     """
-    if isinstance(value, int) and 0 <= value <= 100:
+    if isinstance(value, int) and -1 <= value <= 100:
         settings["alerts"]["temp_core"] = value
         update()
