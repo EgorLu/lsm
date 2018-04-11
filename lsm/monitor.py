@@ -8,13 +8,13 @@ saving the scan report and updating the events log,
 additionally, it generates the email to be sent.
 """
 
-import psutil
-import config
-import mail
-import prettytable
-import os
-import json
-import util_funcs as utils
+import psutil  # PSUtil module for the system scanning.
+import config  # Config module for access to the settings.
+import mail  # Mail module for email sending.
+import prettytable  # Prettytable module for the status report.
+import os  # Os module for the current directory and 'isfile' function.
+import json  # JSON module for the Json manipulation.
+import util_funcs as utils  # Utils module for the utility functions.
 
 
 # TODO: Only check things if they are set as the alert.
@@ -75,6 +75,9 @@ def check_status():
     :return: Dict, containing the updated system status (alerts only).
     """
 
+    # Get current directory path
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     # Timestamp
     timestamp = utils.timestamp
 
@@ -82,8 +85,8 @@ def check_status():
     logger = utils.logger()
 
     """Last known system status"""
-    if os.path.isfile("./status.json"):
-        with open("./status.json", "r") as f:
+    if os.path.isfile("{}/status.json".format(dir_path)):
+        with open("{}/status.json".format(dir_path), "r") as f:
             prev_status = json.loads(f.read())
     else:
         prev_status = {}
@@ -284,10 +287,14 @@ def save_report(log_data):
     :return: None
     :raises TypeError: If the parameter is not a Dict.
     """
+
+    # Get current directory path
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     if type(log_data) is dict:
         json_data = json.dumps(log_data, indent=4, sort_keys=True)
         # Create the file if it doesn't exist.
-        with open("./status.json", "w+") as f:
+        with open("{}/status.json".format(dir_path), "w+") as f:
             f.write(json_data)
     else:
         raise TypeError("Parameter must be a dictionary!")
@@ -298,10 +305,13 @@ def read_log():
     Reads the log file and prints it on the screen.
     :return: None
     """
-    if not os.path.isfile("./system.log"):
+    # Get current directory path
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    if not os.path.isfile("{}/status.json".format(dir_path)):
         print "The log is empty"
     else:
-        with open("./system.log", "r") as f:
+        with open("{}/status.json".format(dir_path), "r") as f:
             print f.read()
 
 
@@ -384,32 +394,36 @@ def main():
         return False
 
     # The alerts that will be mailed.
-    mail_content = ""
+    mail_content = []
 
     status_report = check_status()
 
     # Check the status report and decide about which alerts a mail needs to be sent.
-    # If the reported time == updated time we will send a mail.
+    # If the reported time == updated time we will send a mail:
     for key in status_report:
         if key == "resolved":
             # Resolved alerts
             for alert in status_report["resolved"]:
-                mail_content += "{} status is resolved.\n".format(alert)
+                mail_content.append("{} status is resolved.".format(alert))
         # Since 'processes' is a nested dictionary, we need to iterate over it's content.
         elif key == "processes":
             for process in status_report[key]:
                 if is_reported(status_report[key][process]):
-                    mail_content += "Process {} is DOWN.\n".format(process)
+                    mail_content.append("Process {} is DOWN.".format(process))
         else:
             if is_reported(status_report[key]):
-                mail_content += "{} value is above it's threshold: {}.\n".format(key, status_report[key]["value"])
+                mail_content.append("{} value is above it's threshold: {}.".format(key, status_report[key]["value"]))
 
-    print "DEBUG: Mail content: {}".format(mail_content)
-
+    # If there are any alerts to send:
     if mail_content:
-        mail.send('noreply@me.com', config.settings["email"]["address"], mail_content,
+        # The alerts, as a readable string.
+        mail_body = "\n".join(mail_content)
+        # Debug text, which can be written to a log when the script is ran as a cronjob.
+        print "DEBUG: Mail content: {}".format(mail_body)
+        mail.send('noreply@me.com', config.settings["email"]["address"], mail_body,
                   config.settings["email"]["smtp_server"])
 
+    # Remove the 'resolved' list from the status report before saving.
     status_report.pop("resolved", None)
     save_report(status_report)
 
