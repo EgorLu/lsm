@@ -17,9 +17,6 @@ import json  # JSON module for the Json manipulation.
 import util_funcs as utils  # Utils module for the utility functions.
 
 
-# TODO: Only check things if they are set as the alert.
-
-
 def check_property(prop):
     """
     Check whether a property is supported on the current system.
@@ -57,13 +54,19 @@ def scan_processes():
 
 
 def system_scan():
-    return {
+    result = {
         "processes": scan_processes(),
-        "cpu": psutil.cpu_percent(interval=1),  # interval must be set to >0 in order to avoid '0.0' as return
-        "memory": psutil.virtual_memory()[2],  # 3rd cell contains the percentage use
-        "swap": psutil.swap_memory()[3],  # 4th cell contains the percentage use
-        "temp": check_property("sensors_temperatures"),
     }
+    if config.settings["alerts"]["cpu_percent"] > -1:
+        result["cpu"] = psutil.cpu_percent(interval=1)  # interval must be set to >0 in order to avoid '0.0' as return
+    if config.settings["alerts"]["memory_percent"] > -1:
+        result["memory"] = psutil.virtual_memory()[2]  # 3rd cell contains the percentage use
+    if config.settings["alerts"]["swap_percent"] > -1:
+        result["swap"] = psutil.swap_memory()[3]  # 4th cell contains the percentage use
+    if config.settings["alerts"]["temp_core"] > -1:
+        result["temp"] = check_property("sensors_temperatures")
+
+    return result
 
 
 def check_status():
@@ -145,7 +148,7 @@ def check_status():
 
     """CPU"""
     # If the CPU value is above it's alert threshold:
-    if sys_scan["cpu"] > config.settings["alerts"]["cpu_percent"]:
+    if "cpu" in sys_scan and sys_scan["cpu"] > config.settings["alerts"]["cpu_percent"]:
         # If the cpu alert was already logged:
         if "cpu" in prev_status:
             # If more than hour passed since the alert's report:
@@ -175,7 +178,7 @@ def check_status():
 
     """Memory"""
     # If the memory value is above it's alert threshold:
-    if sys_scan["memory"] > config.settings["alerts"]["memory_percent"]:
+    if "memory" in sys_scan and sys_scan["memory"] > config.settings["alerts"]["memory_percent"]:
         # If the memory alert was already logged:
         if "memory" in prev_status:
             # If more than hour passed since the alert's report:
@@ -205,7 +208,7 @@ def check_status():
 
     """Swap"""
     # If the swap memory value is above it's alert threshold.
-    if sys_scan["swap"] > config.settings["alerts"]["swap_percent"]:
+    if "swap" in sys_scan and sys_scan["swap"] > config.settings["alerts"]["swap_percent"]:
         # If the swap memory alert was already logged:
         if "swap" in prev_status:
             # If more than hour passed since the alert's report:
