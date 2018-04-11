@@ -5,7 +5,7 @@ setup(
     version='0.1',
     packages=['lsm'],
     install_requires=[
-        'psutil',
+        'psutil==5.4.3',
         'prettytable',
         'python-crontab'
     ],
