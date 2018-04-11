@@ -17,7 +17,12 @@ def send(sender, to, body, smtp_server):
 
     # Send the message via our own SMTP server, but don't include the
     # envelope header.
-    server = smtplib.SMTP(smtp_server, "2525")
+    if ":" in smtp_server:
+        address, port = smtp_server.split(":")
+    else:
+        address, port = smtp_server, "25"
+
+    server = smtplib.SMTP(address, port)
 
     # If the username and the password are not empty:
     if config.settings["email"]["smtp_user"] and config.settings["email"]["smtp_pass"]:
