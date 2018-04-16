@@ -12,13 +12,20 @@ import cron  # Cron module for the crontab manipulations.
 # Menu decorator
 def menu_decorator(menu):
     def wrapper():
+        # Header
         os.system("clear")
         print "Light System Monitor\n"
+
+        # Current menu
         menu()
+
+        # Footer
         print
+        # If the decorated function is a submenu:
         if menu.__name__[:3] == "sub":
             print "9. Back"
-        if menu.__name__ == "menu_main":
+        # Else if the decorated function is the main menu:
+        elif menu.__name__ == "menu_main":
             print "0. Exit"
         else:
             print "0. Main menu"
@@ -39,6 +46,9 @@ def menu_main():
 
 # Execute menu
 def exec_menu(choice, current_menu):
+    # If the 'choice' action exists in the current menu's options,
+    # use it. Otherwise remain the in the current menu.
+    # This can be redone to use dict.get() method actually.
     try:
         menu_actions[current_menu][choice]()
     except KeyError:
